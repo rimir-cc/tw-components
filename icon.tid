@@ -1,9 +1,11 @@
 created: 20260305110450252
 modified: 20260305110450252
+tags: $:/tags/Image
 title: $:/plugins/rimir/components/icon
-type: image/svg+xml
+type: text/vnd.tiddlywiki
 
-<svg width="22pt" height="22pt" viewBox="0 0 24 24" fill="none" stroke="maroon" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+\parameters (size:"22pt")
+<svg width=<<size>> height=<<size>> viewBox="0 0 24 24" fill="none" stroke="maroon" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M20.5 7.28L12 12 3.5 7.28"/>
 <path d="M12 21.5v-9.5"/>
 <path d="M20.5 16.72L12 12 3.5 16.72"/>
