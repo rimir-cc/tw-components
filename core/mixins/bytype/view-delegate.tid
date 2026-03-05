@@ -1,0 +1,8 @@
+code-body: yes
+created: 20260205092214710
+modified: 20260305110450248
+tags: 
+title: $:/plugins/rimir/components/core/mixins/bytype/view-delegate
+type: text/vnd.tiddlywiki
+
+\procedure rrc0.elem-view(element, element-type) <$set name="call" value=`rrc1.elem-view:$(element-type)$`><%if [<call>is[variable]]%><$transclude $variable=<<call>> element=<<element>>/><%else%><<element>><%endif%></$set>

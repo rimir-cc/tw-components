@@ -1,0 +1,63 @@
+created: 20260305110450250
+modified: 20260305110450250
+rdt.order: 3
+rdt.plugin-key: components
+rdt.plugin-name: components
+rdt.plugin-subtitle: Reusable UI component framework with mixin system
+rdt.section: Dev Workflow
+title: $:/plugins/rimir/components/doc/dev-workflow
+type: text/vnd.tiddlywiki
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/page">
+<$fill $name="body">
+
+!! Plugin files
+
+|!File |!Role |
+|`components/pills.tid` |Pills facade component |
+|`components/vtabs.tid` |Vertical tabs facade component |
+|`core/menu.tid` |Generic element renderer |
+|`core/mixins/bytype/*.tid` |Delegate mixins (view, click, visibility, class) |
+|`core/mixins/state-handling.tid` |State tiddler/field computation |
+|`core/mixins/utils.tid` |Sync utilities |
+|`core/styles/bytype/*.tid` |Type-specific CSS |
+|`showcase.tid` |Live demo |
+
+!! Restart rules
+
+|!Change |!Restart needed? |
+|Edit existing `.tid` |No — filesystem-watcher syncs |
+|Add/delete/rename `.tid` |Yes — directory scan at boot |
+
+!! Creating a new facade
+
+# Create `.tid` in `components/` directory
+# Set title under `$:/plugins/rimir/components/`
+# Add `\parameters` declaration with defaults
+# `\import` needed mixins from `core/mixins/`
+# Define `rrc0.elems`, `rrc0.elem-type`
+# Define `rrc1.*` handlers (state, click, view)
+# Add CSS (class-prefixed, not `@scope`)
+# Transclude `core/menu` or inline the render loop
+# Restart server
+
+!! Adding an element type to vtabs
+
+# Choose a type code (e.g., `sec`, `act`, `lnk`)
+# Add click handler: `rrc1.elem-clicked:<type>`
+# Add view slot in body-level `<%if%>` chain
+# Add CSS for the type
+# Add to `visible-types` default parameter
+
+!! Known limitations
+
+* `@scope` CSS is Chrome-only — use class-prefixed CSS instead
+* `$slot` in procedures — see Architecture section
+* No click slots in vtabs (hardcoded behaviors)
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/callout" type="tip">
+<$fill $name="body">CSS uses class prefixes (`.rrc-pills`, `.rrc-vtabs`) instead of `@scope` for Firefox compatibility.</$fill>
+</$transclude>
+
+</$fill>
+</$transclude>

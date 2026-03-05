@@ -1,0 +1,10 @@
+code-body: yes
+created: 20260211131041137
+modified: 20260305110450248
+tags: 
+title: $:/plugins/rimir/components/core/mixins/single-select
+type: text/vnd.tiddlywiki
+
+\procedure rrc1.elem-clicked(element) <$let state.tiddler={{{[function[rrc1.sync.tiddler]]}}} state.field={{{[<rrc1.sync.field>]}}}><$rrcu.ac.sync-with-field tiddler=<<state.tiddler>> field=<<state.field>> element=<<element>>/></$let>
+
+\function rrc1.elem-selected(tiddler, field, element, yes, no) [<tiddler>get<field>match<element>then<yes>else<no>]

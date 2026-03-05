@@ -1,0 +1,92 @@
+created: 20260305110450250
+modified: 20260305110450250
+rdt.order: 4
+rdt.plugin-key: components
+rdt.plugin-name: components
+rdt.plugin-subtitle: Reusable UI component framework with mixin system
+rdt.section: Examples
+title: $:/plugins/rimir/components/doc/examples
+type: text/vnd.tiddlywiki
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/page">
+<$fill $name="body">
+
+!! Pills — minimal multi-select
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements="Red Green Blue"
+  selection="multi" />
+```
+
+!! Pills — single-select
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements="Option-A Option-B Option-C"
+  selection="single" />
+```
+
+!! Pills — with filtering
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements="[tag[Topic]]"
+  selection="multi"
+  filterable="yes" />
+```
+
+!! Pills — custom view slot
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements="Alpha Beta Gamma"
+  selection="multi">
+  <$fill $name="view">
+    <strong><<element>></strong>
+  </$fill>
+</$transclude>
+```
+
+!! Pills — syncing to external tiddler
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements="Tag1 Tag2 Tag3"
+  selection="multi"
+  sync-tiddler="MyTiddler"
+  sync-field="tags" />
+```
+
+!! Vertical tabs — basic setup
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/vtabs"
+  elements="[tag[Section]]"
+  type-fn="[get[elem-type]]"
+  visible-types="sec act lnk">
+  <$fill $name="view-sec">
+    Section: <<element>>
+  </$fill>
+  <$fill $name="view-act">
+    Action: <<element>>
+  </$fill>
+</$transclude>
+```
+
+!! Raw mixin usage (advanced)
+
+```
+\import [[$:/plugins/rimir/components/core/mixins/...]]
+\procedure rrc0.elems() item1 item2 item3
+\procedure rrc0.elem-type(element) selector
+\procedure rrc1.elem-clicked:selector(element) ...
+<$transclude $tiddler="$:/plugins/rimir/components/core/menu"/>
+```
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/callout" type="info">
+<$fill $name="body">Facade components handle all mixin wiring. Raw mixin usage is only needed for building entirely new component types.</$fill>
+</$transclude>
+
+</$fill>
+</$transclude>

@@ -1,0 +1,10 @@
+code-body: yes
+created: 20260207113044232
+modified: 20260305110450248
+tags: 
+title: $:/plugins/rimir/components/core/mixins/state-handling
+type: text/vnd.tiddlywiki
+
+\function rrc1.state.prefix() $:/state/rimir/components
+\function rrc1.state.tiddler(key, uid) [<key>!is[blank]]:then[<rrc1.state.prefix>addsuffix[:]addsuffix<key>]~[<rrc1.state.prefix>]+[addsuffix<uid>]
+\function rrc1.state.field(key) text

@@ -1,0 +1,8 @@
+code-body: yes
+created: 20260205085622924
+modified: 20260305110450248
+tags: 
+title: $:/plugins/rimir/components/core/mixins/bytype/visibility-delegate
+type: text/vnd.tiddlywiki
+
+\function rrc0.elem-visible(elem, element-type) [[rrc1.elem-visible:]addsuffix<element-type>is[variable]]~[[rrc1.elem-visible]is[variable]]:map[function<currentTiddler>,<elem>,<element-type>]~[[yes]]

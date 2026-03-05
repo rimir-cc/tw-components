@@ -1,0 +1,83 @@
+code-body: yes
+created: 20260305110450253
+modified: 20260305110450253
+title: $:/plugins/rimir/components/pills
+type: text/vnd.tiddlywiki
+
+\parameters (elements:"", selection:"multi", filterable:"no", sync-tiddler:"", sync-field:"text", state:"", instid:"")
+
+\import $:/plugins/rimir/components/core/mixins/utils $:/plugins/rimir/components/core/mixins/bytype/visibility-delegate $:/plugins/rimir/components/core/mixins/bytype/class-delegate $:/plugins/rimir/components/core/mixins/bytype/view-delegate $:/plugins/rimir/components/core/mixins/bytype/click-delegate $:/plugins/rimir/components/core/mixins/state-handling
+
+<!-- State -->
+\function rrc1.state.prefix() [<state>!is[blank]]~[[$:/state/rimir/components/pills]]
+\function rrc1.uid() [<instid>!is[blank]]~[<qualify>]
+\function rrc1.sync.tiddler() [<sync-tiddler>!is[blank]]~[function[rrc1.state.tiddler],[],<rrc1.uid>]
+\function rrc1.sync.field() [<sync-field>!is[blank]else[text]]
+
+<!-- Model -->
+\function rrc0.elems() [<filterable>match[yes]then[__f]] [subfilter<elements>]
+\function rrc0.elem-type(element) [<element>match[__f]then[filter]else[selector]]
+
+<!-- Selection check (works for single, multi, and none) -->
+\function rrc1.elem-selected(tiddler, field, element, yes, no) [<tiddler>get<field>enlist-input[]match<element>then<yes>else<no>]
+\function rrc1.elem-add-class(element) [function[rrc1.sync.tiddler]]:map[function[rrc1.elem-selected],<currentTiddler>,<rrc1.sync.field>,<element>,[selected]]
+
+<!-- Visibility -->
+\function rrc1.visible-by:selection(elem) [function[rrc1.sync.tiddler]get<rrc1.sync.field>enlist-input[]match<elem>then[yes]else[no]]
+\function rrc1.visible-by:filter(elem) [function[rrc1.state.tiddler],[filter-text],<rrc1.uid>get<rrc1.state.field filter-text>else[]]:filter[<elem>search<currentTiddler>]+[then[yes]else[no]]
+\function rrc1.elem-visible:selector(element) [function[rrc1.visible-by:selection],<element>match[yes]][function[rrc1.visible-by:filter],<element>match[yes]]+[count[]compare:integer:gt[0]then[yes]else[no]]
+
+<!-- Click: selector elements — branches on selection param -->
+\procedure rrc1.elem-clicked(element, modifier, relative-coords)
+<%if [<selection>match[multi]]%><$let st={{{[function[rrc1.sync.tiddler]]}}} sf={{{[<rrc1.sync.field>]}}}><$rrcu.ac.sync-with-list tiddler=<<st>> field=<<sf>> element=<<element>>/></$let><%elseif [<selection>match[single]]%><$let st={{{[function[rrc1.sync.tiddler]]}}} sf={{{[<rrc1.sync.field>]}}}><$rrcu.ac.sync-with-field tiddler=<<st>> field=<<sf>> element=<<element>>/></$let><%endif%><$slot $name="on-select" element=<<element>> modifier=<<modifier>>/>
+\end
+
+<!-- Click: filter element -->
+\procedure rrc1.elem-clicked:filter(element, modifier, relative-coords)
+<$let popup-state={{{[function[rrc1.state.tiddler],[filter-popup],<rrc1.uid>]}}}><%if [<popup-state>is[tiddler]]%><$action-deletetiddler $tiddler=<<popup-state>>/><%else%><$action-popup $state=<<popup-state>> $coords=<<relative-coords>> $floating="yes"/><%endif%></$let>
+\end
+
+<!-- View: selector elements (slot with fallback) -->
+\procedure rrc1.elem-view:selector(element)
+<$slot $name="view" element=<<element>>><<element>></$slot>
+\end
+
+<!-- View: filter element -->
+\procedure rrc1.elem-view:filter(element)
+<$let filter-state={{{[function[rrc1.state.tiddler],[filter-text],<rrc1.uid>]}}}>{{$:/core/images/down-arrow|12pt}}<%if [<filter-state>get<rrc1.state.field filter-text>length[]compare:integer:gt[0]]%><$button class="tc-btn-invisible" actions="""<$action-deletetiddler $tiddler=<<filter-state>>/>""" tooltip="List is filtered. Click to clear!">‼️</$button><%endif%></$let>
+\end
+
+<style>
+.rrc-pills span.rrc-elem {
+	display: inline;
+	text-align: center;
+	padding: 2px 5px 2px 5px;
+}
+.rrc-pills span.rrc-elem:hover {
+	cursor: pointer;
+}
+.rrc-pills span[data-elem-type].selected {
+	background-color: brown;
+}
+.rrc-pills span[data-elem-type="selector"] {
+	border-radius: 1em;
+	font-weight: bold;
+	background-color: lightgrey;
+}
+.rrc-pills span:hover[data-elem-type="selector"] {
+	background-color: blue;
+}
+</style>
+<div class="rrc-pills">
+<$transclude $tiddler="$:/plugins/rimir/components/core/menu">
+<$fill $name="additional-contents">
+<%if [<filterable>match[yes]]%>
+<$reveal type=popup state={{{[function[rrc1.state.tiddler],[filter-popup],<rrc1.uid>]}}}>
+	<div class="tc-drop-down">
+		Search: <$edit-text tiddler={{{[function[rrc1.state.tiddler],[filter-text],<rrc1.uid>]}}} field=<<rrc1.state.field filter-text>> tag="input"/>
+	</div>
+</$reveal>
+<%endif%>
+</$fill>
+</$transclude>
+</div>

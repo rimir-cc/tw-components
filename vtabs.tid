@@ -1,0 +1,125 @@
+code-body: yes
+created: 20260305110450254
+modified: 20260305110450254
+title: $:/plugins/rimir/components/vtabs
+type: text/vnd.tiddlywiki
+
+\parameters (elements:"", type-fn:"", state:"", instid:"", visible-types:"sec", default-collapsed:"yes", lnk-navigate:"yes")
+
+\import $:/plugins/rimir/components/core/mixins/utils $:/plugins/rimir/components/core/mixins/bytype/visibility-delegate $:/plugins/rimir/components/core/mixins/bytype/class-delegate $:/plugins/rimir/components/core/mixins/bytype/click-delegate $:/plugins/rimir/components/core/mixins/state-handling
+
+<!-- State -->
+\function rrc1.state.prefix() [<state>!is[blank]]~[[$:/state/rimir/components/vtabs]]
+\function rrc1.uid() [<instid>!is[blank]]~[<qualify>]
+
+<!-- Model -->
+\function rrc0.elems() [subfilter<elements>]
+\function rrc0.elem-type(element) [subfilter<type-fn>else[unknown]]
+
+<!-- Visibility: visible-types always shown, others follow section collapse state -->
+\function internal.default-vis() [<default-collapsed>match[yes]then[no]else[yes]]
+\function rrc1.elem-visible(elem, elem-type) [enlist<visible-types>match<elem-type>then[yes]]~[function[rrc1.state.tiddler],[section-vis],<rrc1.uid>get<rrc1.state.field section-vis>]~[function[internal.default-vis]]
+
+<!-- Click: sec — toggle section visibility + fire slot -->
+\procedure rrc1.elem-clicked:sec(element, modifier, relative-coords)
+<$let vis-tid={{{[function[rrc1.state.tiddler],[section-vis],<rrc1.uid>]}}} vis-fld=<<rrc1.state.field section-vis>> stored={{{[<vis-tid>get<vis-fld>]}}} effective={{{[<stored>!is[blank]]~[function[internal.default-vis]]}}} new-val={{{[<effective>match[yes]then[no]else[yes]]}}}><$action-setfield $tiddler=<<vis-tid>> $field=<<vis-fld>> $value=<<new-val>>/></$let>
+\end
+
+<!-- Click: act — store last-clicked action in state for display -->
+\procedure rrc1.elem-clicked:act(element, modifier, relative-coords)
+<$action-setfield $tiddler=`$(state)$:last-click` $value=<<element>>/>
+\end
+
+<!-- Click: lnk — navigate to element title -->
+\procedure rrc1.elem-clicked:lnk(element, modifier, relative-coords)
+<%if [<lnk-navigate>match[yes]]%><$action-navigate $to=<<element>>/><%endif%>
+\end
+
+<!-- Click: pop — placeholder -->
+\procedure rrc1.elem-clicked:pop(element, modifier, relative-coords)
+\end
+
+<!-- Click: sco — no action (subcomponent handles its own clicks) -->
+\procedure rrc1.elem-clicked:sco(element, modifier, relative-coords)
+\end
+
+\procedure rrc1.elem-clicked:spa(element, modifier, relative-coords)
+\end
+
+\procedure rrc1.elem-clicked(element, modifier, relative-coords)
+\end
+
+<style>
+.rrc-vtabs span.rrc-elem {
+	width: 400px;
+	display: block;
+	border-color: black;
+	border-bottom: 0px;
+	text-align: center;
+	padding: 3px;
+}
+.rrc-vtabs span.rrc-elem:hover {
+	cursor: pointer;
+}
+.rrc-vtabs span[data-elem-type="spa"]:hover {
+	cursor: auto;
+}
+.rrc-vtabs span[data-elem-type="sec"] {
+	background: white;
+	border-top-left-radius: 1em;
+	border: 1px dotted;
+	font-weight: bold;
+}
+.rrc-vtabs span:hover[data-elem-type="sec"] {
+	background-color: blue;
+}
+.rrc-vtabs span[data-elem-type="act"] {
+	background: lightgrey;
+	border: 1px dotted;
+	font-weight: bold;
+}
+.rrc-vtabs span:hover[data-elem-type="act"] {
+	background-color: grey;
+}
+.rrc-vtabs span[data-elem-type="pop"] {
+	background: lightgrey;
+	border: 1px dotted;
+	font-weight: bold;
+}
+.rrc-vtabs span:hover[data-elem-type="pop"] {
+	background-color: grey;
+}
+.rrc-vtabs span[data-elem-type="lnk"] {
+	background: lightgrey;
+	color: blue;
+	border: 1px dotted;
+	font-weight: bold;
+}
+.rrc-vtabs span:hover[data-elem-type="lnk"] {
+	background-color: lightblue;
+}
+.rrc-vtabs span[data-elem-type="sco"] {
+	background: white;
+	border: 1px dotted;
+	font-weight: bold;
+}
+.rrc-vtabs span:hover[data-elem-type="sco"] {
+	background-color: #f0f0f0;
+}
+</style>
+<div class="rrc-vtabs">
+<$eventcatcher selector=".rrc-elem" $click=<<rrc0.elem-clicked>> tag="div">
+<div class="rrc-component">
+	<$list filter="[function[rrc0.elems]]" variable="element">
+		<$let
+			deftype={{{[<rrc0.def-elem-type>!is[blank]else[unknown]]}}}
+			element-type={{{[[rrc0.elem-type]!is[variable]then<deftype>]~[function[rrc0.elem-type],<element>else<deftype>]}}}
+		>
+			<%if [[rrc0.elem-visible]!is[variable]]~[function[rrc0.elem-visible],<element>,<element-type>match[yes]]%>
+				<span class=`rrc-elem rrc-type-$(element-type)$${[[rrc0.elem-add-class]!is[variable]then[]]~[function[rrc0.elem-add-class],<element>,<element-type>addprefix[ ]]}$` data-elem-type=<<element-type>> data-elem=<<element>>><%if [<element-type>match[sec]]%><$slot $name="view-sec" element=<<element>>><$slot $name="view" element=<<element>> element-type="sec"><<element>></$slot></$slot><%elseif [<element-type>match[act]]%><$slot $name="view-act" element=<<element>>><$slot $name="view" element=<<element>> element-type="act"><<element>></$slot></$slot><%elseif [<element-type>match[pop]]%><$slot $name="view-pop" element=<<element>>><$slot $name="view" element=<<element>> element-type="pop"><<element>></$slot></$slot><%elseif [<element-type>match[lnk]]%><$slot $name="view-lnk" element=<<element>>><$slot $name="view" element=<<element>> element-type="lnk"><<element>></$slot></$slot><%elseif [<element-type>match[sco]]%><$slot $name="view-sco" element=<<element>>><$slot $name="view" element=<<element>> element-type="sco"><<element>></$slot></$slot><%elseif [<element-type>match[spa]]%><$slot $name="view-spa" element=<<element>>><$slot $name="view" element=<<element>> element-type="spa"><<element>></$slot></$slot><%else%><<element>><%endif%></span>
+			<%endif%>
+		</$let>
+	</$list>
+</div>
+</$eventcatcher>
+</div>

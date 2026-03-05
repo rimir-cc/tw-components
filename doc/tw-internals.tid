@@ -1,0 +1,56 @@
+created: 20260305110450251
+modified: 20260305110450251
+rdt.order: 7
+rdt.plugin-key: components
+rdt.plugin-name: components
+rdt.plugin-subtitle: Reusable UI component framework with mixin system
+rdt.section: TW Internals
+title: $:/plugins/rimir/components/doc/tw-internals
+type: text/vnd.tiddlywiki
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/page">
+<$fill $name="body">
+
+!! \import pragma
+
+Pulls functions/procedures from tiddlers into scope. Used for mixin composition (last-wins semantics).
+
+!! \parameters
+
+Declares tiddler-level parameters with defaults. Facades use this for their public API.
+
+!! $transclude modes
+
+* `$transclude $tiddler=""` — creates new transclusion boundary (slot/fill works)
+* `$transclude $variable=""` — does NOT create boundary (slot may not find fill)
+
+!! $slot / $fill
+
+* Insert content at predefined points in templates
+* ''Critical limitation'': no colons in `$name` (fails silently) — use hyphens
+* ''Critical limitation'': `$slot` in `\procedure` doesn't find `$fill` from `$transclude $tiddler=`
+* Workaround: body-level `$slot` with `<%if%>` branching
+* Why pills works: intermediate `core/menu` tiddler transclusion creates boundary
+
+!! $eventcatcher
+
+Catches click events matching CSS selectors. Sets `dom-data-*` variables from `data-*` attributes on clicked elements.
+
+!! <%if%>
+
+Conditional rendering widget. Used in vtabs for type-based branching at body level.
+
+!! code-body: yes
+
+Field that tells TW to treat tiddler body as `\function`/`\procedure`/`\parameters` definitions.
+
+!! is[variable]
+
+Filter operator that checks if a variable/function is defined in current scope.
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/callout" type="danger">
+<$fill $name="body">Never use colons in `$slot`/`$fill` `$name` attributes (e.g., `$name="view:sco"`). TW silently fails — no error, just falls back to default content. Use hyphens instead: `$name="view-sco"`.</$fill>
+</$transclude>
+
+</$fill>
+</$transclude>

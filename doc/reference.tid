@@ -1,0 +1,82 @@
+created: 20260305110450251
+modified: 20260305110450251
+rdt.order: 6
+rdt.plugin-key: components
+rdt.plugin-name: components
+rdt.plugin-subtitle: Reusable UI component framework with mixin system
+rdt.section: Reference
+title: $:/plugins/rimir/components/doc/reference
+type: text/vnd.tiddlywiki
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/page">
+<$fill $name="body">
+
+!! Pills parameters
+
+|!Parameter |!Default |!Description |
+|`elements` |`""` |Space-separated list or TW filter |
+|`selection` |`"multi"` |`"multi"` or `"single"` |
+|`filterable` |`"no"` |`"yes"` to enable search filter |
+|`sync-tiddler` |`""` |External tiddler to sync state to |
+|`sync-field` |`""` |Field on sync-tiddler |
+|`state` |auto-generated |State tiddler for selection |
+|`instid` |auto-generated |Instance ID for CSS scoping |
+
+!! Pills slots
+
+|!Slot name |!Variables |!Description |
+|`view` |`element` |Custom element rendering |
+|`on-select` |`element`, `selected` |Callback on selection change |
+
+!! Vtabs parameters
+
+|!Parameter |!Default |!Description |
+|`elements` |`""` |TW filter returning element titles |
+|`type-fn` |`""` |Filter to get element type code |
+|`state` |auto-generated |State tiddler for active tab |
+|`instid` |auto-generated |Instance ID |
+|`visible-types` |`"sec act lnk"` |Space-separated visible type codes |
+|`default-collapsed` |`"no"` |Start with sections collapsed |
+|`lnk-navigate` |`"yes"` |Navigate on link-type click |
+
+!! Vtabs slots
+
+|!Slot name |!Variables |!Description |
+|`view-sec` |`element` |Render for type `sec` |
+|`view-act` |`element` |Render for type `act` |
+|`view-pop` |`element` |Render for type `pop` (popup) |
+|`view-lnk` |`element` |Render for type `lnk` (link) |
+|`view-sco` |`element` |Render for type `sco` (scope) |
+|`view-spa` |`element` |Render for type `spa` (spacer) |
+|`view` |`element` |Fallback render for unknown types |
+
+!! Mixin functions — Layer 0 (rrc0.*)
+
+|!Function |!Purpose |
+|`rrc0.elems()` |Returns element list (space-separated or filter) |
+|`rrc0.elem-type(element)` |Maps element to type code |
+|`rrc0.elem-visible(element)` |Visibility filter for element |
+|`rrc0.elem-view(element)` |Rendering dispatch |
+|`rrc0.elem-clicked(element)` |Click handler dispatch |
+|`rrc0.elem-add-class(element)` |CSS class dispatch |
+
+!! Mixin functions — Layer 1 (rrc1.*)
+
+|!Function |!Purpose |
+|`rrc1.elem-clicked:<type>(element)` |Type-specific click handler |
+|`rrc1.elem-view:<type>(element)` |Type-specific view |
+|`rrc1.state-tiddler()` |Returns state tiddler title |
+|`rrc1.is-selected(element)` |Check if element is selected |
+|`rrc1.toggle-select(element)` |Toggle element selection |
+
+!! CSS classes
+
+|!Class |!Description |
+|`.rrc-menu` |Outer container |
+|`.rrc-elem` |Individual element |
+|`.rrc-elem-selected` |Selected element |
+|`.rrc-pills` |Pills container scope |
+|`.rrc-vtabs` |Vtabs container scope |
+
+</$fill>
+</$transclude>

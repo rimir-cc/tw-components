@@ -1,0 +1,20 @@
+code-body: yes
+created: 20260205102857977
+modified: 20260305110450247
+tags: 
+title: $:/plugins/rimir/components/core/mixins/bytype/click-delegate
+type: text/vnd.tiddlywiki
+
+\procedure rrc0.elem-clicked()
+<$let
+	element=<<dom-data-elem>>
+	type=<<dom-data-elem-type>>
+	modifier=<<modifier>>
+	relative-coords=<<tv-popup-coords>>
+	variable={{{[[rrc1.elem-clicked:]addsuffix<type>is[variable]]~[[rrc1.elem-clicked]is[variable]]}}}
+>
+	<%if [<element>!is[blank]][<variable>!is[blank]]+[count[]compare:integer:gt[1]]%>
+		<$transclude $variable=<<variable>> element=<<element>> modifier=<<modifier>> relative-coords=<<relative-coords>>/>
+	<%endif%>
+</$let>
+\end

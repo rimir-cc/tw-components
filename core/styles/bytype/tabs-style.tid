@@ -1,0 +1,25 @@
+code-body: yes
+created: 20260206113338746
+modified: 20260305110450249
+tags: 
+title: $:/plugins/rimir/components/core/styles/bytype/tabs-style
+type: text/vnd.tiddlywiki
+
+\parameters (elem-type, bgcolor:"lightgrey", hbgcolor:"grey", shape)
+
+\whitespace trim
+
+span[data-elem-type="<<elem-type>>"] {
+	background:<<bgcolor>>;
+	<%if [enlist<shape>match[btlf]]%>
+	border-top-left-radius: 1em;
+	<%endif%>
+	<%if [enlist<shape>match[lnk]]%>
+	color: blue;
+	<%endif%>
+	border: 1px dotted;
+	font-weight:bold;
+}
+span:hover[data-elem-type="<<elem-type>>"] {
+	background-color: <<hbgcolor>>;
+}

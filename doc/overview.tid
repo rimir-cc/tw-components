@@ -1,0 +1,57 @@
+created: 20260305110450251
+modified: 20260305110450251
+rdt.hub-category: ui-framework
+rdt.hub-category-name: UI Framework & Domain Model
+rdt.hub-order: 3
+rdt.order: 1
+rdt.plugin-key: components
+rdt.plugin-name: components
+rdt.plugin-subtitle: Reusable UI component framework with mixin system
+rdt.section: Overview
+title: $:/plugins/rimir/components/doc/overview
+type: text/vnd.tiddlywiki
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/page">
+<$fill $name="body">
+
+!! What it does
+
+Reusable UI component framework with composable mixins. Provides facade components (pills, vtabs) that most users consume, and a raw mixin system for advanced customization.
+
+!! Features
+
+* ''Facade components'' — ready-to-use: `pills` (selectable tags), `vtabs` (collapsible vertical tabs)
+* ''Three-layer mixin system'' — `rrc0.*` (core/model), `rrc1.*` (behavior), consumer overrides
+* ''Slot-based customization'' — `$fill` slots for custom rendering and callbacks
+* ''State management'' — automatic state tiddler handling, sync to external tiddlers/fields
+* ''Type dispatch'' — element types control rendering, click behavior, and visibility
+
+!! Quick start
+
+Two modes:
+
+* ''Facades'' (recommended): transclude `pills` or `vtabs` with parameters + slots
+* ''Raw mixins'' (advanced): import mixins directly, define `rrc0.*`/`rrc1.*` functions
+
+Example pills usage:
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements="Alpha Beta Gamma"
+  selection="multi" />
+```
+
+Example vtabs usage:
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/vtabs"
+  elements="[tag[Section]]"
+  type-fn="[get[elem-type]]" />
+```
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/callout" type="info">
+<$fill $name="body">Facades handle all mixin wiring internally. Most users never need to touch the `rrc0.*`/`rrc1.*` layer directly.</$fill>
+</$transclude>
+
+</$fill>
+</$transclude>

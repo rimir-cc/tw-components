@@ -1,0 +1,47 @@
+created: 20260305110450249
+modified: 20260305110450249
+rdt.order: 2
+rdt.plugin-key: components
+rdt.plugin-name: components
+rdt.plugin-subtitle: Reusable UI component framework with mixin system
+rdt.section: Architecture
+title: $:/plugins/rimir/components/doc/architecture
+type: text/vnd.tiddlywiki
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/page">
+<$fill $name="body">
+
+!! Three-layer mixin system
+
+* ''rrc0.* (Core/Model)'' — element list, type mapping, visibility, view dispatch, click dispatch, CSS classes
+** `rrc0.elems()` — returns element list
+** `rrc0.elem-type(element)` — maps element to type code
+** `rrc0.elem-visible(element)` — visibility filter
+** `rrc0.elem-view(element)` — rendering dispatch
+** `rrc0.elem-clicked(element)` — click handler dispatch
+** `rrc0.elem-add-class(element)` — CSS class dispatch
+
+* ''rrc1.* (Behavior)'' — state handling, selection, type-specific handlers
+** State functions, sync functions, type-specific handlers
+** Delegation pattern: check `rrc1.<op>:<type>`, fallback to `rrc1.<op>`, use default
+
+!! Facade components
+
+|!Facade |!Parameters |!Key slots |!Rendering |
+|`pills` |elements, selection, filterable, sync-tiddler, sync-field, state, instid |view, on-select |Transcludes `core/menu` |
+|`vtabs` |elements, type-fn, state, instid, visible-types, default-collapsed, lnk-navigate |view-sec, view-act, view-pop, view-lnk, view-sco, view-spa, view (fallback) |Inlines render loop |
+
+!! Core renderer
+
+`core/menu.tid`: generic renderer with `$eventcatcher` catching clicks on `.rrc-elem`, dispatching to `rrc0.elem-clicked`.
+
+!! Why vtabs inlines the render loop
+
+`$slot` inside `\procedure` doesn't find `$fill` from outer `$transclude $tiddler=`. vtabs puts `$slot` at body level with `<%if%>` type branching as a workaround. pills works because it transcludes `core/menu` (intermediate tiddler boundary).
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/callout" type="warning">
+<$fill $name="body">`$slot` inside `\procedure` does NOT find `$fill` from an outer `$transclude $tiddler=` — this is a TiddlyWiki limitation. Use body-level `$slot` with `<%if%>` branching as a workaround.</$fill>
+</$transclude>
+
+</$fill>
+</$transclude>

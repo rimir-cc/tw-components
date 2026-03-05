@@ -1,0 +1,39 @@
+created: 20260305110450251
+modified: 20260305110450251
+rdt.order: 5
+rdt.plugin-key: components
+rdt.plugin-name: components
+rdt.plugin-subtitle: Reusable UI component framework with mixin system
+rdt.section: FAQ
+title: $:/plugins/rimir/components/doc/faq
+type: text/vnd.tiddlywiki
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/page">
+<$fill $name="body">
+
+!! Q: When should I use a facade vs raw mixins?
+
+Use facades (`pills`, `vtabs`) for standard use cases — they handle all mixin wiring internally. Use raw mixins only when you need a completely new component type that doesn't fit either facade's rendering model.
+
+!! Q: Why doesn't $slot work inside my \procedure?
+
+This is a TiddlyWiki limitation. `$slot` inside `\procedure` cannot find `$fill` from an outer `$transclude $tiddler=` call. The workaround is to place `$slot` at body level (outside any procedure) with `<%if%>` branching. This is why vtabs inlines its render loop instead of using `core/menu.tid`.
+
+!! Q: How do I add a new element type?
+
+# Choose a type code (e.g., `mytype`)
+# Add a view delegate in `core/mixins/bytype/view-delegate.tid` (or define `rrc1.elem-view:mytype` in your component)
+# Add a click handler: `rrc1.elem-clicked:mytype`
+# Add CSS for the type (class-prefixed, e.g., `.rrc-pills .rrc-elem-mytype`)
+# If using vtabs, add an `<%if%>` branch and include the code in `visible-types`
+
+!! Q: Why no @scope CSS?
+
+`@scope` is Chrome-only as of early 2026. For cross-browser compatibility, the components use class-prefixed CSS (`.rrc-pills`, `.rrc-vtabs`) to scope styles.
+
+!! Q: How do I sync component state to an external tiddler?
+
+Use the `sync-tiddler` and `sync-field` parameters on pills. The component reads initial state from and writes selection changes to the specified tiddler field. For vtabs, the `state` parameter controls where the active tab state is stored.
+
+</$fill>
+</$transclude>

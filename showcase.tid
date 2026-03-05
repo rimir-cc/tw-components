@@ -1,0 +1,80 @@
+created: 20260226120000000
+modified: 20260305110450253
+tags: 
+title: $:/plugins/rimir/components/showcase
+type: text/vnd.tiddlywiki
+
+! Components Facade Showcase
+
+This tiddler demonstrates the facade layer for the components plugin. Facades expose a simple parameter + slot API, hiding the internal mixin machinery.
+
+!! 1. Standalone Pills (minimal)
+
+Multi-select pills with default styling — just pass `elements` and go:
+
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+	elements="alpha beta gamma delta epsilon"
+	selection="multi"
+	state="$:/state/showcase/pills-basic"/>
+
+!! 2. Single-Select Pills
+
+Only one pill can be active at a time:
+
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+	elements="red green blue yellow"
+	selection="single"
+	state="$:/state/showcase/pills-single"/>
+
+!! 3. Pills with Filtering + Custom View + on-select
+
+Filter popup, custom rendering via `view` slot, and `on-select` action logging:
+
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+	elements="p-1 p-2 p-3 p-4 p-5 p-6 p-7 p-8"
+	filterable="yes"
+	selection="multi"
+	state="$:/state/showcase/pills-filtered">
+	<$fill $name="view">
+		''<$text text={{{[<element>uppercase[]]}}}/>''
+	</$fill>
+	<$fill $name="on-select">
+		<$action-log message=`Pill selected: $(element)$ (modifier: $(modifier)$)`/>
+	</$fill>
+</$transclude>
+
+!! 4. Vertical Tabs with Nested Pills
+
+Demonstrates vtabs with sections, actions, links, and nested pill subcomponents.
+
+* ''sec'' (sections): click to expand/collapse child elements
+* ''act'' (actions): clicking stores the last-clicked action in state — shown below the component
+* ''lnk'' (links): clicking navigates to the element as a tiddler title
+* ''sco'' (subcomponents): nested pills with independent selection state — no `$unset` needed because `$fill` content runs in the caller's scope
+
+<$transclude $tiddler="$:/plugins/rimir/components/vtabs"
+	elements="section-1 act-11 act-12 lnk-11 scomp-11 scomp-12"
+	type-fn="[<element>prefix[section-]then[sec]]~[<element>prefix[act-]then[act]]~[<element>prefix[lnk-]then[lnk]]~[<element>prefix[scomp-]then[sco]]"
+	state="$:/state/showcase/vtabs">
+
+	<$fill $name="view-sec">
+		<strong><$text text={{{[<element>removeprefix[section-]addprefix[Section ]]}}}/></strong>
+	</$fill>
+
+	<$fill $name="view-act">
+		&#9654; Action: <<element>>
+	</$fill>
+
+	<$fill $name="view-lnk">
+		&#128279; <<element>>
+	</$fill>
+
+	<$fill $name="view-sco">
+		<$transclude $tiddler="$:/plugins/rimir/components/pills"
+			elements={{{[<element>match[scomp-11]then[p-1 p-2 p-3 p-4]else[x-1 x-2 x-3 x-4]]}}}
+			selection="multi"
+			state=`$:/state/showcase/vtabs:$(element)$`/>
+	</$fill>
+</$transclude>
+
+Last action clicked: ''<$text text={{$:/state/showcase/vtabs:last-click}}/>''

@@ -1,0 +1,10 @@
+code-body: yes
+created: 20260211131452158
+modified: 20260305110450248
+tags: 
+title: $:/plugins/rimir/components/core/mixins/multi-select
+type: text/vnd.tiddlywiki
+
+\procedure rrc1.elem-clicked(element) <$let state.tiddler={{{[function[rrc1.sync.tiddler]]}}} state.field={{{[<rrc1.sync.field>]}}}><$rrcu.ac.sync-with-list tiddler=<<state.tiddler>> field=<<state.field>> element=<<element>>/></$let>
+
+\function rrc1.elem-selected(tiddler, field, element, yes, no) [<tiddler>get<field>enlist-input[]match<element>then<yes>else<no>]

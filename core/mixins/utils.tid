@@ -1,0 +1,14 @@
+code-body: yes
+created: 20260205155904789
+modified: 20260305110450249
+tags: 
+title: $:/plugins/rimir/components/core/mixins/utils
+type: text/vnd.tiddlywiki
+
+\widget $rrcu.ac.sync-with-list(tiddler, field, element)
+<$action-listops $tiddler=<<tiddler>> $field=<<field>> $subfilter="+[toggle<element>]"/>
+\end
+
+\widget $rrcu.ac.sync-with-field(tiddler, field, element)
+<$action-setfield $tiddler=<<tiddler>> $field=<<field>> $value=<<element>>/>
+\end

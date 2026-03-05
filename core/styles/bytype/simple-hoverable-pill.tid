@@ -1,0 +1,18 @@
+code-body: yes
+created: 20260205135524175
+modified: 20260305110450249
+tags: 
+title: $:/plugins/rimir/components/core/styles/bytype/simple-hoverable-pill
+type: text/vnd.tiddlywiki
+
+\parameters (elem-type, bgcolor:"red", hbgcolor:"blue")
+
+span[data-elem-type="<<elem-type>>"] {
+	border-radius: 1em;
+	font-weight:bold;
+	background-color: <<bgcolor>>;
+}
+
+span:hover[data-elem-type="<<elem-type>>"] {
+	background-color: <<hbgcolor>>;
+}
