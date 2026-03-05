@@ -20,6 +20,14 @@ No external prerequisites.
 
 Use facade components directly via transclusion. See the showcase tiddler (`$:/plugins/rimir/components/showcase`) for interactive examples of all available components and mixins.
 
+## Plugin Library
+
+Install from the [rimir plugin library](https://rimir-cc.github.io/tw-plugin-library/) via *Control Panel → Plugins → Get more plugins*.
+
+## Demo
+
+Try this plugin in the [live demo wiki](https://rimir-cc.github.io/tw-demo/).
+
 ## License
 
 MIT -- see [LICENSE.md](LICENSE.md)
