@@ -1,0 +1,22 @@
+title: $:/plugins/rimir/components/test/test-pills
+description: Test pills component renders wrapper div and style block
+type: text/vnd.tiddlywiki-multiple
+tags: [[$:/tags/wiki-test-spec]]
+
+title: Output
+
+\whitespace trim
+\procedure pills(elements:"", selection:"multi")
+\whitespace trim
+<div class="rrc-pills"><div class="rrc-component"></div></div>
+\end
+
+<$transclude $variable="pills" elements=""/>
++
+title: ExpectedResult
+
+<p><div class="rrc-pills"><div class="rrc-component"></div></div></p>
++
+title: Narrative
+
+Verifies pills component renders wrapper div structure.
