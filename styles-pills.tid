@@ -1,0 +1,25 @@
+tags: $:/tags/Stylesheet
+title: $:/plugins/rimir/components/styles-pills
+type: text/vnd.tiddlywiki
+
+.rrc-pills span.rrc-elem {
+	display: inline;
+	text-align: center;
+	padding: 2px 5px 2px 5px;
+}
+.rrc-pills span.rrc-elem:hover {
+	cursor: pointer;
+}
+.rrc-pills span[data-elem-type].selected {
+	background-color: <<colour primary>>;
+	color: <<colour background>>;
+}
+.rrc-pills span[data-elem-type="selector"] {
+	border-radius: 1em;
+	font-weight: bold;
+	background-color: <<colour tag-background>>;
+}
+.rrc-pills span:hover[data-elem-type="selector"] {
+	background-color: <<colour primary>>;
+	color: <<colour background>>;
+}

@@ -47,27 +47,6 @@ type: text/vnd.tiddlywiki
 <$let filter-state={{{[function[rrc1.state.tiddler],[filter-text],<rrc1.uid>]}}}>{{$:/core/images/down-arrow|12pt}}<%if [<filter-state>get<rrc1.state.field filter-text>length[]compare:integer:gt[0]]%><$button class="tc-btn-invisible" actions="""<$action-deletetiddler $tiddler=<<filter-state>>/>""" tooltip="List is filtered. Click to clear!">‼️</$button><%endif%></$let>
 \end
 
-<style>
-.rrc-pills span.rrc-elem {
-	display: inline;
-	text-align: center;
-	padding: 2px 5px 2px 5px;
-}
-.rrc-pills span.rrc-elem:hover {
-	cursor: pointer;
-}
-.rrc-pills span[data-elem-type].selected {
-	background-color: brown;
-}
-.rrc-pills span[data-elem-type="selector"] {
-	border-radius: 1em;
-	font-weight: bold;
-	background-color: lightgrey;
-}
-.rrc-pills span:hover[data-elem-type="selector"] {
-	background-color: blue;
-}
-</style>
 <div class="rrc-pills">
 <$transclude $tiddler="$:/plugins/rimir/components/core/menu">
 <$fill $name="additional-contents">

@@ -1,0 +1,61 @@
+tags: $:/tags/Stylesheet
+title: $:/plugins/rimir/components/styles-vtabs
+type: text/vnd.tiddlywiki
+
+.rrc-vtabs span.rrc-elem {
+	width: 400px;
+	display: block;
+	border-color: <<colour tiddler-border>>;
+	border-bottom: 0px;
+	text-align: center;
+	padding: 3px;
+}
+.rrc-vtabs span.rrc-elem:hover {
+	cursor: pointer;
+}
+.rrc-vtabs span[data-elem-type="spa"]:hover {
+	cursor: auto;
+}
+.rrc-vtabs span[data-elem-type="sec"] {
+	background: <<colour tiddler-background>>;
+	border-top-left-radius: 1em;
+	border: 1px dotted;
+	font-weight: bold;
+}
+.rrc-vtabs span:hover[data-elem-type="sec"] {
+	background-color: <<colour primary>>;
+	color: <<colour background>>;
+}
+.rrc-vtabs span[data-elem-type="act"] {
+	background: <<colour tag-background>>;
+	border: 1px dotted;
+	font-weight: bold;
+}
+.rrc-vtabs span:hover[data-elem-type="act"] {
+	background-color: <<colour muted-foreground>>;
+}
+.rrc-vtabs span[data-elem-type="pop"] {
+	background: <<colour tag-background>>;
+	border: 1px dotted;
+	font-weight: bold;
+}
+.rrc-vtabs span:hover[data-elem-type="pop"] {
+	background-color: <<colour muted-foreground>>;
+}
+.rrc-vtabs span[data-elem-type="lnk"] {
+	background: <<colour tag-background>>;
+	color: <<colour primary>>;
+	border: 1px dotted;
+	font-weight: bold;
+}
+.rrc-vtabs span:hover[data-elem-type="lnk"] {
+	background-color: <<colour notification-background>>;
+}
+.rrc-vtabs span[data-elem-type="sco"] {
+	background: <<colour tiddler-background>>;
+	border: 1px dotted;
+	font-weight: bold;
+}
+.rrc-vtabs span:hover[data-elem-type="sco"] {
+	background-color: <<colour page-background>>;
+}

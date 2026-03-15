@@ -49,64 +49,6 @@ type: text/vnd.tiddlywiki
 \procedure rrc1.elem-clicked(element, modifier, relative-coords)
 \end
 
-<style>
-.rrc-vtabs span.rrc-elem {
-	width: 400px;
-	display: block;
-	border-color: black;
-	border-bottom: 0px;
-	text-align: center;
-	padding: 3px;
-}
-.rrc-vtabs span.rrc-elem:hover {
-	cursor: pointer;
-}
-.rrc-vtabs span[data-elem-type="spa"]:hover {
-	cursor: auto;
-}
-.rrc-vtabs span[data-elem-type="sec"] {
-	background: white;
-	border-top-left-radius: 1em;
-	border: 1px dotted;
-	font-weight: bold;
-}
-.rrc-vtabs span:hover[data-elem-type="sec"] {
-	background-color: blue;
-}
-.rrc-vtabs span[data-elem-type="act"] {
-	background: lightgrey;
-	border: 1px dotted;
-	font-weight: bold;
-}
-.rrc-vtabs span:hover[data-elem-type="act"] {
-	background-color: grey;
-}
-.rrc-vtabs span[data-elem-type="pop"] {
-	background: lightgrey;
-	border: 1px dotted;
-	font-weight: bold;
-}
-.rrc-vtabs span:hover[data-elem-type="pop"] {
-	background-color: grey;
-}
-.rrc-vtabs span[data-elem-type="lnk"] {
-	background: lightgrey;
-	color: blue;
-	border: 1px dotted;
-	font-weight: bold;
-}
-.rrc-vtabs span:hover[data-elem-type="lnk"] {
-	background-color: lightblue;
-}
-.rrc-vtabs span[data-elem-type="sco"] {
-	background: white;
-	border: 1px dotted;
-	font-weight: bold;
-}
-.rrc-vtabs span:hover[data-elem-type="sco"] {
-	background-color: #f0f0f0;
-}
-</style>
 <div class="rrc-vtabs">
 <$eventcatcher selector=".rrc-elem" $click=<<rrc0.elem-clicked>> tag="div">
 <div class="rrc-component">
