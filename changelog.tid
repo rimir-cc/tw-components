@@ -6,6 +6,7 @@ type: text/vnd.tiddlywiki
 ! Changelog
 
 |!Version |!Date |!Changes |
+|v0.1.5 |2026-03-23 |Add `filterable="inline"` mode to pills component (search input above pills instead of popup) |
 |v0.1.4 |2026-03-15 |Extract inline styles to stylesheet tiddlers, replace hardcoded colors with palette references |
 |v0.1.3 |2026-03-15 |Add name field to plugin.info |
 |v0.1.2 |2026-03-15 |Add regression tests and CI test gate |

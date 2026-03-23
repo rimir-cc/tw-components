@@ -6,7 +6,7 @@ Build complex interactive widgets by combining small, focused building blocks.
 
 ## Key features
 
-* **Facade components** -- ready-to-use `pills` and `vtabs` components
+* **Facade components** -- ready-to-use `pills` (with inline/popup filtering) and `vtabs` components
 * **Mixin system** -- composable behaviours: state handling, single/multi select, delegation
 * **Style-by-type** -- swappable visual styles (e.g., `simple-hoverable-pill`, `tabs-style`)
 * **Menu component** -- configurable menu with delegate-based actions
