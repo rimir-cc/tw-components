@@ -18,10 +18,6 @@ type: text/vnd.tiddlywiki
 \function rrc0.elems() [<filterable>match[yes]then[__f]] [subfilter<elements>]
 \function rrc0.elem-type(element) [<element>match[__f]then[filter]else[selector]]
 
-<!-- Inline filter: visibility applies same as popup filter -->
-\function _rrc-inline-filter-text() [function[rrc1.state.tiddler],[filter-text],<rrc1.uid>get<rrc1.state.field filter-text>]
-\function _rrc-inline-visible(elem) [function[_rrc-inline-filter-text]is[blank]then[yes]] ~[<elem>search{$:/temp/_rrc_inline_search$}then[yes]else[no]]
-
 <!-- Selection check (works for single, multi, and none) -->
 \function rrc1.elem-selected(tiddler, field, element, yes, no) [<tiddler>get<field>enlist-input[]match<element>then<yes>else<no>]
 \function rrc1.elem-add-class(element) [function[rrc1.sync.tiddler]]:map[function[rrc1.elem-selected],<currentTiddler>,<rrc1.sync.field>,<element>,[selected]]

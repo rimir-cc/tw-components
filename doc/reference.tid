@@ -16,9 +16,9 @@ type: text/vnd.tiddlywiki
 |!Parameter |!Default |!Description |
 |`elements` |`""` |Space-separated list or TW filter |
 |`selection` |`"multi"` |`"multi"` or `"single"` |
-|`filterable` |`"no"` |`"yes"` to enable search filter |
+|`filterable` |`"no"` |`"no"`, `"yes"` (popup), or `"inline"` (search input above pills) |
 |`sync-tiddler` |`""` |External tiddler to sync state to |
-|`sync-field` |`""` |Field on sync-tiddler |
+|`sync-field` |`"text"` |Field on sync-tiddler |
 |`state` |auto-generated |State tiddler for selection |
 |`instid` |auto-generated |Instance ID for CSS scoping |
 
@@ -26,7 +26,7 @@ type: text/vnd.tiddlywiki
 
 |!Slot name |!Variables |!Description |
 |`view` |`element` |Custom element rendering |
-|`on-select` |`element`, `selected` |Callback on selection change |
+|`on-select` |`element`, `modifier` |Callback on selection change |
 
 !! Vtabs parameters
 
@@ -35,8 +35,8 @@ type: text/vnd.tiddlywiki
 |`type-fn` |`""` |Filter to get element type code |
 |`state` |auto-generated |State tiddler for active tab |
 |`instid` |auto-generated |Instance ID |
-|`visible-types` |`"sec act lnk"` |Space-separated visible type codes |
-|`default-collapsed` |`"no"` |Start with sections collapsed |
+|`visible-types` |`"sec"` |Space-separated always-visible type codes |
+|`default-collapsed` |`"yes"` |Start with sections collapsed |
 |`lnk-navigate` |`"yes"` |Navigate on link-type click |
 
 !! Vtabs slots
@@ -65,18 +65,22 @@ type: text/vnd.tiddlywiki
 |!Function |!Purpose |
 |`rrc1.elem-clicked:<type>(element)` |Type-specific click handler |
 |`rrc1.elem-view:<type>(element)` |Type-specific view |
-|`rrc1.state-tiddler()` |Returns state tiddler title |
-|`rrc1.is-selected(element)` |Check if element is selected |
-|`rrc1.toggle-select(element)` |Toggle element selection |
+|`rrc1.state.tiddler(key, uid)` |Returns state tiddler title |
+|`rrc1.state.prefix()` |Returns state tiddler prefix |
+|`rrc1.state.field(key)` |Returns state field name |
+|`rrc1.elem-selected(tiddler, field, element, yes, no)` |Check if element is selected |
+|`rrc1.elem-add-class(element)` |Returns CSS class for selected state |
 
 !! CSS classes
 
 |!Class |!Description |
-|`.rrc-menu` |Outer container |
-|`.rrc-elem` |Individual element |
-|`.rrc-elem-selected` |Selected element |
+|`.rrc-component` |Inner component container |
+|`.rrc-elem` |Individual element (click target) |
+|`.selected` |Added to selected elements |
+|`.rrc-type-<code>` |Per-type styling hook (e.g., `.rrc-type-sec`) |
 |`.rrc-pills` |Pills container scope |
 |`.rrc-vtabs` |Vtabs container scope |
+|`.rrc-pills-inline-filter` |Inline filter input container |
 
 </$fill>
 </$transclude>
