@@ -1,0 +1,88 @@
+created: 20260329120000000
+modified: 20260329120000000
+title: $:/plugins/rimir/components/llm-help/vtabs-create
+tags: $:/tags/rimir/llm-help/page
+llm-help-path: components/facades/vtabs/create
+llm-help-description: Step-by-step guide to adding vtabs to a tiddler
+llm-help-context: rimir/components
+type: text/vnd.tiddlywiki
+
+Creating Vtabs — Step by Step
+
+1. Define your elements as a filter. Vtabs uses `[subfilter<elements>]`, so pass a filter that returns your element list. For a static list: `"alpha beta gamma"` works (treated as a title list). For dynamic: `"[tag[MyTag]sort[title]]"`.
+
+2. Define the type function. This filter receives `<<element>>` and returns a type code. Use `~` (else) chains with `prefix[]then[]` or `match[]then[]` patterns.
+
+3. Provide `$fill` slots for each type you use. At minimum, provide `view-sec` for section headers and the relevant type slots.
+
+4. Set `state` explicitly if you need to read `<state>:last-click` or check collapse state externally.
+
+Minimal example (sections + actions):
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/vtabs"
+  elements="settings item-1 item-2 item-3"
+  type-fn="[<element>match[settings]then[sec]else[act]]"
+  state="$:/state/demo/vtabs">
+
+  <$fill $name="view-sec">
+    <strong><<element>></strong>
+  </$fill>
+
+  <$fill $name="view-act">
+    &#9654; <<element>>
+  </$fill>
+</$transclude>
+
+Last clicked: <$text text={{$:/state/demo/vtabs:last-click}}/>
+```
+
+With links and subcomponents:
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/vtabs"
+  elements="nav home about contact tags"
+  type-fn="[<element>match[nav]then[sec]]~[<element>match[tags]then[sco]]~[[lnk]]"
+  state="$:/state/demo/vtabs-full">
+
+  <$fill $name="view-sec">
+    <strong>&#9776; <<element>></strong>
+  </$fill>
+
+  <$fill $name="view-lnk">
+    &#128279; <<element>>
+  </$fill>
+
+  <$fill $name="view-sco">
+    <$transclude $tiddler="$:/plugins/rimir/components/pills"
+      elements="Tag1 Tag2 Tag3"
+      selection="multi"
+      state=`$:/state/demo/vtabs-full:$(element)$`/>
+  </$fill>
+</$transclude>
+```
+
+Dynamic elements from wiki data:
+
+```
+<$let my-elements={{{[tag[NavItem]sort[order]join[ ]]}}}>
+<$transclude $tiddler="$:/plugins/rimir/components/vtabs"
+  elements=<<my-elements>>
+  type-fn="[<element>get[nav-type]]"
+  state="$:/state/demo/vtabs-dynamic">
+  ...slots...
+</$transclude>
+</$let>
+```
+
+Common patterns:
+
+- **Settings panel**: `sec` for category headers, `act` for individual settings, read `last-click` to show the selected setting's detail view
+- **Navigation sidebar**: `sec` for groups, `lnk` for page links, `sco` for nested pill filters
+- **Tool palette**: `sec` for tool categories, `act` for tools, `spa` for visual separation between groups
+
+Tips:
+
+- Use `default-collapsed="no"` if you want all sections expanded on load
+- The `visible-types` parameter defaults to `"sec"` — add more types if they should remain visible when sections are collapsed (e.g., `visible-types="sec spa"`)
+- Subcomponents (`sco`) manage their own state independently — use backtick templates for unique state per element: `state=` `` `$:/state/parent:$(element)$` ``

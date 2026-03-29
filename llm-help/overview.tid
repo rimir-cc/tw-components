@@ -1,0 +1,44 @@
+created: 20260329120000000
+modified: 20260329120000000
+title: $:/plugins/rimir/components/llm-help/overview
+tags: $:/tags/rimir/llm-help/page
+llm-help-path: components
+llm-help-description: UI component framework — pills (selection) and vtabs (vertical tabs with typed elements)
+llm-help-context: rimir/components
+llm-help-sort: 01
+type: text/vnd.tiddlywiki
+
+Components Plugin
+
+A UI component framework providing reusable, composable facade components. Each facade hides the internal mixin machinery behind a simple parameter + slot API.
+
+Available components:
+
+- **pills** — Horizontal selection pills. Multi-select or single-select. Optional filtering. Syncs selection to any tiddler field. Use for: tag selection, filter toggles, option pickers.
+- **vtabs** — Vertical tab list with typed elements (sections, actions, links, subcomponents, spacers). Sections collapse/expand. Use for: navigation sidebars, settings panels, tool palettes.
+
+Usage pattern (both components):
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements="alpha beta gamma"
+  selection="multi"
+  state="$:/state/my/pills">
+  <$fill $name="view">Custom: <<element>></$fill>
+  <$fill $name="on-select"><$action-log message=<<element>>/></$fill>
+</$transclude>
+```
+
+Key concepts:
+
+- **elements**: Space-separated list (or TW filter for vtabs) of items to display
+- **state**: Tiddler where component stores its internal state. Auto-generated if omitted, but provide an explicit one if you need to read the selection externally.
+- **slots**: `$fill` blocks that customize rendering and behavior
+- **sync**: Pills can sync selection to an external tiddler/field
+
+Navigate deeper:
+
+- llm_help("components/facades") — component reference: pills, vtabs, and future facades
+- llm_help("components/architecture") — mixin system internals (rrc0/rrc1 layers, delegates, core/menu)
+- llm_help("components/recipes") — custom combinations and composition patterns
+- llm_help("components/new-facade") — how to create entirely new facade components

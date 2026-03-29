@@ -1,0 +1,74 @@
+created: 20260329120000000
+modified: 20260329120000000
+title: $:/plugins/rimir/components/llm-help/pills-create
+tags: $:/tags/rimir/llm-help/page
+llm-help-path: components/facades/pills/create
+llm-help-description: Step-by-step guide to adding pills to a tiddler
+llm-help-context: rimir/components
+type: text/vnd.tiddlywiki
+
+Creating Pills — Step by Step
+
+1. Decide the elements. These are the values the user picks from — typically a static space-separated list like `"red green blue"`.
+
+2. Choose selection mode: `"multi"` (toggle, space-separated list result) or `"single"` (one active value).
+
+3. If you need to read the selection from another tiddler or widget, set `sync-tiddler` and `sync-field`. Otherwise the selection is only available internally.
+
+4. Set an explicit `state` if you need stable state across re-renders (e.g., `$:/state/myapp/color-pills`). Omit for throwaway usage.
+
+Minimal example (multi-select):
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements="alpha beta gamma delta"
+  selection="multi"
+  state="$:/state/demo/pills"/>
+```
+
+Single-select with custom view:
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements="red green blue"
+  selection="single"
+  sync-tiddler="$:/temp/chosen-color"
+  sync-field="text">
+  <$fill $name="view">
+    <span style="color:<<element>>;">&#9679;</span> <<element>>
+  </$fill>
+</$transclude>
+```
+
+With filtering and on-select callback:
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements="p-1 p-2 p-3 p-4 p-5 p-6 p-7 p-8"
+  filterable="yes"
+  selection="multi"
+  state="$:/state/demo/filtered">
+  <$fill $name="view">
+    ''<$text text={{{[<element>uppercase[]]}}}/>''
+  </$fill>
+  <$fill $name="on-select">
+    <$action-log message=`Selected: $(element)$`/>
+  </$fill>
+</$transclude>
+```
+
+Inline filter (search input above pills):
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements="apple banana cherry date elderberry fig grape"
+  filterable="inline"
+  selection="multi"
+  state="$:/state/demo/inline-filter"/>
+```
+
+Common patterns:
+
+- **Tag picker**: `elements` = list of available tags, `sync-tiddler` = target tiddler, `sync-field` = `"tags"`
+- **Filter toggle**: `elements` = filter options, read selection from `sync-tiddler` and use it in a filter elsewhere
+- **Dynamic elements**: Use a filter run as `elements` value, e.g., `elements="[tag[Color]get[title]]"` — but note pills treats this as a space-separated literal list, NOT a filter. For dynamic lists, pre-compute and pass as a variable.

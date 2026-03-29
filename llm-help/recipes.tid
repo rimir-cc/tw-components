@@ -1,0 +1,203 @@
+created: 20260329120000000
+modified: 20260329120000000
+title: $:/plugins/rimir/components/llm-help/recipes
+tags: $:/tags/rimir/llm-help/page
+llm-help-path: components/recipes
+llm-help-description: Custom component recipes — combining facades, overriding behavior, inventing new patterns
+llm-help-context: rimir/components
+llm-help-sort: 04
+type: text/vnd.tiddlywiki
+
+Component Recipes — Custom Combinations
+
+These recipes show how to compose existing facades into custom UI patterns. All examples work in regular tiddler wikitext — no new facade .tid files needed.
+
+---
+
+Recipe 1: Collapsible vtabs with detail panel
+
+A vtabs sidebar where clicking an `act` item shows its content in a detail area:
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/vtabs"
+  elements="general item-a item-b item-c advanced item-d item-e"
+  type-fn="[<element>match[general]then[sec]]~[<element>match[advanced]then[sec]]~[[act]]"
+  state="$:/state/my/settings"
+  default-collapsed="no">
+
+  <$fill $name="view-sec">
+    <strong><<element>></strong>
+  </$fill>
+
+  <$fill $name="view-act">
+    &#9654; <<element>>
+  </$fill>
+</$transclude>
+
+<!-- Detail panel reacting to last-click -->
+<$reveal type="match" state="$:/state/my/settings:last-click" text="item-a">
+Content for item A goes here.
+</$reveal>
+<$reveal type="match" state="$:/state/my/settings:last-click" text="item-b">
+Content for item B goes here.
+</$reveal>
+```
+
+---
+
+Recipe 2: Tag editor (pills synced to tiddler field)
+
+Use pills as a tag picker that writes directly to a tiddler's field:
+
+```
+Available tags:
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements="important urgent review done blocked"
+  selection="multi"
+  sync-tiddler="MyTiddler"
+  sync-field="tags"/>
+
+Currently set: {{MyTiddler!!tags}}
+```
+
+---
+
+Recipe 3: Vtabs with nested pill filters (sco type)
+
+Each section contains a pill subcomponent for filtering:
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/vtabs"
+  elements="colors color-pills sizes size-pills"
+  type-fn="[<element>suffix[-pills]then[sco]]~[[sec]]"
+  state="$:/state/my/filter-panel"
+  default-collapsed="no">
+
+  <$fill $name="view-sec">
+    <strong><<element>></strong>
+  </$fill>
+
+  <$fill $name="view-sco">
+    <$transclude $tiddler="$:/plugins/rimir/components/pills"
+      elements={{{[<element>match[color-pills]then[red green blue yellow]else[S M L XL]]}}}
+      selection="multi"
+      sync-tiddler="$:/temp/my/filters"
+      sync-field=<<element>>/>
+  </$fill>
+</$transclude>
+```
+
+Read selected filters: `{{$:/temp/my/filters!!color-pills}}` and `{{$:/temp/my/filters!!size-pills}}`
+
+---
+
+Recipe 4: Single-select pills as tab bar with content panels
+
+Use single-select pills as horizontal tabs:
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements="overview settings logs"
+  selection="single"
+  sync-tiddler="$:/state/my/tabs"
+  sync-field="text"/>
+
+<$reveal type="match" state="$:/state/my/tabs" text="overview">
+  Overview content...
+</$reveal>
+<$reveal type="match" state="$:/state/my/tabs" text="settings">
+  Settings content...
+</$reveal>
+<$reveal type="match" state="$:/state/my/tabs" text="logs">
+  Logs content...
+</$reveal>
+```
+
+---
+
+Recipe 5: Vtabs as navigation with tiddler links
+
+Use `lnk` type to build a navigation sidebar:
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/vtabs"
+  elements="Pages $:/myapp/home $:/myapp/settings $:/myapp/about"
+  type-fn="[<element>match[Pages]then[sec]]~[[lnk]]"
+  state="$:/state/my/nav"
+  default-collapsed="no">
+
+  <$fill $name="view-sec">
+    <strong><<element>></strong>
+  </$fill>
+
+  <$fill $name="view-lnk">
+    <$text text={{{[<element>split[/]last[]]}}}/>
+  </$fill>
+</$transclude>
+```
+
+---
+
+Recipe 6: Multi-select pills with action callback
+
+Trigger a side-effect each time a pill is toggled:
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements="feat-1 feat-2 feat-3"
+  selection="multi"
+  sync-tiddler="$:/config/features"
+  sync-field="enabled">
+  <$fill $name="on-select">
+    <$action-log message=`Feature $(element)$ toggled`/>
+    <!-- Could also call set_field on another tiddler, send a message, etc. -->
+  </$fill>
+</$transclude>
+```
+
+---
+
+Recipe 7: Dynamic elements from wiki data
+
+Elements can come from any source — pre-compute them with `$let`:
+
+```
+<!-- Pills from all tiddlers tagged "Project" -->
+<$let project-list={{{[tag[Project]sort[title]join[ ]]}}}>
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements=<<project-list>>
+  selection="single"
+  sync-tiddler="$:/state/active-project">
+  <$fill $name="view">
+    <$text text={{{[<element>get[caption]else<element>]}}}/>
+  </$fill>
+</$transclude>
+</$let>
+```
+
+---
+
+Recipe 8: Combining pills and vtabs for master-detail
+
+Horizontal pill tabs select a category, vtabs shows items in that category:
+
+```
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements="tools settings info"
+  selection="single"
+  sync-tiddler="$:/state/category"
+  sync-field="text"/>
+
+<$reveal type="match" state="$:/state/category" text="tools">
+<$transclude $tiddler="$:/plugins/rimir/components/vtabs"
+  elements="section tool-a tool-b tool-c"
+  type-fn="[<element>match[section]then[sec]]~[[act]]"
+  state="$:/state/tools-vtabs"
+  default-collapsed="no">
+  <$fill $name="view-sec"><strong>Tools</strong></$fill>
+  <$fill $name="view-act">&#9654; <<element>></$fill>
+</$transclude>
+</$reveal>
+```
+
+Navigate to: llm_help("components/facades") for component reference, llm_help("components/new-facade") for building entirely new facade components

@@ -1,0 +1,20 @@
+created: 20260329120000000
+modified: 20260329120000000
+title: $:/plugins/rimir/components/llm-help/facades
+tags: $:/tags/rimir/llm-help/page
+llm-help-path: components/facades
+llm-help-description: Component reference — available facade components and their APIs
+llm-help-context: rimir/components
+llm-help-sort: 01
+type: text/vnd.tiddlywiki
+
+Facade Components
+
+Facades are the public API of the components plugin. Each facade is a single tiddler you transclude with parameters and customize via `$fill` slots.
+
+Available facades:
+
+- **pills** (`$:/plugins/rimir/components/pills`) — Horizontal selection pills. Multi-select or single-select. Optional filtering. Syncs selection to any tiddler field. Use for: tag selection, filter toggles, option pickers.
+- **vtabs** (`$:/plugins/rimir/components/vtabs`) — Vertical tab list with typed elements (sections, actions, links, subcomponents, spacers). Sections collapse/expand. Use for: navigation sidebars, settings panels, tool palettes.
+
+Navigate deeper: llm_help("components/facades/pills"), llm_help("components/facades/vtabs")

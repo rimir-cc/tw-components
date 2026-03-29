@@ -1,0 +1,110 @@
+created: 20260329120000000
+modified: 20260329120000000
+title: $:/plugins/rimir/components/llm-help/new-facade
+tags: $:/tags/rimir/llm-help/page
+llm-help-path: components/new-facade
+llm-help-description: How to create a new facade component — skeleton, mixins, handlers, styling, TW limitations
+llm-help-context: rimir/components
+llm-help-sort: 05
+type: text/vnd.tiddlywiki
+
+Creating a New Facade Component
+
+A facade is a `.tid` file that composes mixins into a self-contained component with a `\parameters` API and `$slot`/`$fill` customization points.
+
+Step-by-step process:
+
+1. Create the tiddler file in the components plugin directory
+2. Define parameters, import mixins, define rrc0/rrc1 functions
+3. Add the render loop (transclude core/menu or inline)
+4. Add CSS (class-prefixed stylesheet)
+5. Restart the wiki server (new .tid files require restart)
+
+Skeleton for a new facade (using core/menu):
+
+```
+code-body: yes
+title: $:/plugins/rimir/components/myfacade
+type: text/vnd.tiddlywiki
+
+\parameters (elements:"", selection:"multi", state:"", instid:"")
+
+\import $:/plugins/rimir/components/core/mixins/utils $:/plugins/rimir/components/core/mixins/bytype/visibility-delegate $:/plugins/rimir/components/core/mixins/bytype/class-delegate $:/plugins/rimir/components/core/mixins/bytype/view-delegate $:/plugins/rimir/components/core/mixins/bytype/click-delegate $:/plugins/rimir/components/core/mixins/state-handling
+
+<!-- State setup -->
+\function rrc1.state.prefix() [<state>!is[blank]]~[[$:/state/rimir/components/myfacade]]
+\function rrc1.uid() [<instid>!is[blank]]~[<qualify>]
+\function rrc1.sync.tiddler() [function[rrc1.state.tiddler],[],<rrc1.uid>]
+\function rrc1.sync.field() text
+
+<!-- Model: what elements and what types -->
+\function rrc0.elems() [subfilter<elements>]
+\function rrc0.elem-type(element) selector
+
+<!-- Selection check -->
+\function rrc1.elem-selected(tiddler, field, element, yes, no) [<tiddler>get<field>enlist-input[]match<element>then<yes>else<no>]
+\function rrc1.elem-add-class(element) [function[rrc1.sync.tiddler]]:map[function[rrc1.elem-selected],<currentTiddler>,<rrc1.sync.field>,<element>,[selected]]
+
+<!-- Click handler -->
+\procedure rrc1.elem-clicked(element, modifier, relative-coords)
+<$let st={{{[function[rrc1.sync.tiddler]]}}} sf={{{[<rrc1.sync.field>]}}}><$rrcu.ac.sync-with-list tiddler=<<st>> field=<<sf>> element=<<element>>/></$let><$slot $name="on-select" element=<<element>> modifier=<<modifier>>/>
+\end
+
+<!-- View -->
+\procedure rrc1.elem-view:selector(element)
+<$slot $name="view" element=<<element>>><<element>></$slot>
+\end
+
+<div class="rrc-myfacade">
+<$transclude $tiddler="$:/plugins/rimir/components/core/menu">
+<$fill $name="additional-contents">
+  <!-- extra UI like popups, search inputs, etc. -->
+</$fill>
+</$transclude>
+</div>
+```
+
+Key decisions when designing a facade:
+
+**Single type vs multi-type?**
+- Single type (like pills): all elements behave the same. Use one type code (e.g., `selector`). Simpler — use core/menu.
+- Multi-type (like vtabs): elements have different behaviors based on type. Need a `type-fn` parameter and type-specific handlers. May need to inline the render loop for slot support.
+
+**Using core/menu vs inlining?**
+- core/menu: simpler, works when `$slot` is inside a procedure that core/menu calls (pills pattern). `$fill` content is found because core/menu is an intermediate tiddler transclusion.
+- Inline: necessary when you need body-level `$slot` per type (vtabs pattern). Copy the render loop from core/menu and add `<%if%>` branching with `$slot` calls.
+
+**Selection model?**
+- Import `multi-select` mixin for toggle behavior
+- Import `single-select` mixin for replace behavior
+- Or define custom `rrc1.elem-clicked` for entirely different behavior (e.g., navigate, delete, reorder)
+
+**Visibility?**
+- Default: all elements visible
+- Override `rrc1.elem-visible(element, element-type)` to return `yes`/`no`
+- Or define type-specific `rrc1.elem-visible:<type>` for per-type visibility logic
+
+Adding a new element type to an existing facade:
+
+If extending vtabs with a new type code (e.g., `tog` for toggle):
+1. Add click handler: `\procedure rrc1.elem-clicked:tog(element, modifier, relative-coords)`
+2. Add `<%elseif [<element-type>match[tog]]%><$slot $name="view-tog" ...>` in the render loop
+3. Add CSS: `.rrc-vtabs span[data-elem-type="tog"] { ... }`
+
+Styling guidelines:
+
+- Use class-prefixed CSS: `.rrc-myfacade span.rrc-elem { ... }`
+- Never use `@scope` (Chrome-only)
+- Never use `!important`
+- Use palette colors: `<<colour primary>>`, `<<colour background>>`, `<<colour tag-background>>`, etc.
+- Selected elements: `.rrc-myfacade span[data-elem-type].selected { ... }`
+- Per-type styles: `.rrc-myfacade span[data-elem-type="mytype"] { ... }`
+- Create a stylesheet tiddler tagged `$:/tags/Stylesheet`
+
+Important constraints:
+
+- `code-body: yes` is required on all facade tiddlers (prevents wikitext parsing of the pragma section)
+- `\import` must be a single line with all mixin paths space-separated
+- State tiddlers are auto-cleaned by TW only if under `$:/state/` or `$:/temp/`
+- The `<qualify>` macro generates a unique ID per transclusion call stack — use it for `instid` default
+- Element values must not contain spaces (they are space-separated in lists)

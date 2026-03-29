@@ -1,0 +1,60 @@
+created: 20260329120000000
+modified: 20260329120000000
+title: $:/plugins/rimir/components/llm-help/pills
+tags: $:/tags/rimir/llm-help/page
+llm-help-path: components/facades/pills
+llm-help-description: Pills component — parameters, slots, selection modes, filtering, sync
+llm-help-context: rimir/components
+llm-help-sort: 01
+type: text/vnd.tiddlywiki
+
+Pills Component — `$:/plugins/rimir/components/pills`
+
+Horizontal selection pills with optional filtering and external sync.
+
+Parameters:
+
+|!Parameter |!Default |!Description |
+|`elements` |`""` |Space-separated list of element values to display |
+|`selection` |`"multi"` |`"multi"` (toggle) or `"single"` (replace) |
+|`filterable` |`"no"` |`"no"`, `"yes"` (popup search), or `"inline"` (search input above pills) |
+|`sync-tiddler` |`""` |External tiddler to sync selection to (auto-generated if blank) |
+|`sync-field` |`"text"` |Field on sync-tiddler to store selection |
+|`state` |auto |State tiddler prefix (auto-qualified if blank) |
+|`instid` |auto |Unique instance ID (auto-qualified if blank) |
+
+Slots:
+
+|!Slot |!Variables |!Description |
+|`view` |`element` |Custom rendering of each pill. Default: plain text of element value |
+|`on-select` |`element`, `modifier` |Action widgets fired after selection changes |
+
+Selection behavior:
+
+- **multi**: Clicking toggles element in a space-separated list. Multiple elements can be active.
+- **single**: Clicking replaces the current value. Only one element active at a time.
+- Selected pills get CSS class `.selected`.
+
+Reading the selection externally:
+
+The selection is stored in `sync-tiddler` / `sync-field`. If you did not provide `sync-tiddler`, the selection is in the auto-generated state tiddler. To read it reliably, always set an explicit `sync-tiddler`.
+
+```
+<!-- Store selection in MyTiddler/tags field -->
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements="Tag1 Tag2 Tag3"
+  selection="multi"
+  sync-tiddler="MyTiddler"
+  sync-field="tags"/>
+
+<!-- Read it elsewhere -->
+{{MyTiddler!!tags}}
+```
+
+Filtering modes:
+
+- `filterable="no"` — all pills always visible
+- `filterable="yes"` — click the arrow icon to open a popup search input; pills not matching the search text are hidden
+- `filterable="inline"` — search input rendered above the pills; pills not matching are hidden
+
+Navigate deeper: llm_help("components/facades/pills/create") for step-by-step creation guide

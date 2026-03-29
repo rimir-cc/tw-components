@@ -1,0 +1,73 @@
+created: 20260329120000000
+modified: 20260329120000000
+title: $:/plugins/rimir/components/llm-help/architecture
+tags: $:/tags/rimir/llm-help/page
+llm-help-path: components/architecture
+llm-help-description: Mixin system internals — rrc0/rrc1 layers, delegates, dispatch pattern, core/menu renderer
+llm-help-context: rimir/components
+llm-help-sort: 03
+type: text/vnd.tiddlywiki
+
+Component Architecture — Mixin System
+
+Understanding the internals is essential for composing custom components or inventing new facades.
+
+Three-layer model:
+
+**Layer 0 — `rrc0.*` (Core/Model)**: Dispatch functions that route to layer 1. These are defined by the delegate mixins and should NOT be overridden.
+
+- `rrc0.elems()` — returns the element list (defined by the facade)
+- `rrc0.elem-type(element)` — maps element to type code (defined by the facade)
+- `rrc0.elem-visible(element, element-type)` — dispatches to `rrc1.elem-visible:<type>` or `rrc1.elem-visible` or defaults to `yes`
+- `rrc0.elem-view(element, element-type)` — dispatches to `rrc1.elem-view:<type>` or renders element as plain text
+- `rrc0.elem-clicked()` — reads `dom-data-elem` and `dom-data-elem-type` from the click event, dispatches to `rrc1.elem-clicked:<type>` or `rrc1.elem-clicked`
+- `rrc0.elem-add-class(element, element-type)` — dispatches to `rrc1.elem-add-class:<type>` or `rrc1.elem-add-class`
+
+**Layer 1 — `rrc1.*` (Behavior)**: Type-specific handlers. This is where facades define their behavior.
+
+- `rrc1.elem-clicked:<type>(element, modifier, relative-coords)` — type-specific click handler (procedure)
+- `rrc1.elem-clicked(element, modifier, relative-coords)` — generic click handler (fallback)
+- `rrc1.elem-view:<type>(element)` — type-specific view renderer (procedure)
+- `rrc1.elem-visible(element, element-type)` or `rrc1.elem-visible:<type>(element)` — visibility check (function returning `yes`/`no`)
+- `rrc1.elem-add-class(element)` or `rrc1.elem-add-class:<type>(element)` — extra CSS classes (function)
+- `rrc1.state.prefix()` — state tiddler prefix (function)
+- `rrc1.state.tiddler(key, uid)` — computes state tiddler title (function)
+- `rrc1.state.field(key)` — state field name, default `text` (function)
+- `rrc1.uid()` — unique instance ID (function)
+- `rrc1.sync.tiddler()` — external sync tiddler (function)
+- `rrc1.sync.field()` — external sync field (function)
+
+**Layer 2 — Consumer**: The tiddler that transcludes the facade, providing `$fill` slots.
+
+Dispatch pattern (for every operation):
+
+1. Check if `rrc1.<op>:<type>` exists (type-specific) → use it
+2. Check if `rrc1.<op>` exists (generic) → use it
+3. Use default behavior
+
+Available mixins (imported via `\import`):
+
+|!Mixin |!Path |!Provides |
+|state-handling |`core/mixins/state-handling` |`rrc1.state.prefix`, `rrc1.state.tiddler`, `rrc1.state.field` |
+|multi-select |`core/mixins/multi-select` |`rrc1.elem-clicked` (toggle in list), `rrc1.elem-selected` |
+|single-select |`core/mixins/single-select` |`rrc1.elem-clicked` (set single value), `rrc1.elem-selected` |
+|utils |`core/mixins/utils` |`$rrcu.ac.sync-with-list`, `$rrcu.ac.sync-with-field` widgets |
+|view-delegate |`core/mixins/bytype/view-delegate` |`rrc0.elem-view` dispatcher |
+|click-delegate |`core/mixins/bytype/click-delegate` |`rrc0.elem-clicked` dispatcher |
+|visibility-delegate |`core/mixins/bytype/visibility-delegate` |`rrc0.elem-visible` dispatcher |
+|class-delegate |`core/mixins/bytype/class-delegate` |`rrc0.elem-add-class` dispatcher |
+
+Core renderer — `core/menu.tid`:
+
+The generic renderer used by pills (vtabs inlines its own). It:
+1. Iterates `[function[rrc0.elems]]`
+2. Computes element type via `rrc0.elem-type`
+3. Checks visibility via `rrc0.elem-visible`
+4. Renders each element as `<span class="rrc-elem rrc-type-<type> <extra-classes>" data-elem="<element>" data-elem-type="<type>">`
+5. Wraps everything in `$eventcatcher` that catches clicks on `.rrc-elem` and calls `rrc0.elem-clicked`
+
+Critical TW limitation: `$slot` inside `\procedure` does NOT find `$fill` from an outer `$transclude $tiddler=`. Workarounds:
+- Transclude an intermediate tiddler (like pills transcludes `core/menu`) — `$slot` works across tiddler boundaries
+- Inline the render loop with body-level `$slot` and `<%if%>` branching (like vtabs does)
+
+Navigate to: llm_help("components/facades") for component reference, llm_help("components/recipes") for composition patterns, llm_help("components/new-facade") for creating new facades

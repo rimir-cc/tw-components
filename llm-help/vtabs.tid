@@ -1,0 +1,72 @@
+created: 20260329120000000
+modified: 20260329120000000
+title: $:/plugins/rimir/components/llm-help/vtabs
+tags: $:/tags/rimir/llm-help/page
+llm-help-path: components/facades/vtabs
+llm-help-description: Vtabs component — parameters, element types, slots, collapse behavior
+llm-help-context: rimir/components
+llm-help-sort: 02
+type: text/vnd.tiddlywiki
+
+Vtabs Component — `$:/plugins/rimir/components/vtabs`
+
+Vertical tab list with typed elements. Each element has a type that determines its behavior and appearance.
+
+Parameters:
+
+|!Parameter |!Default |!Description |
+|`elements` |`""` |TW filter returning element list |
+|`type-fn` |`""` |TW filter that maps `<<element>>` to a type code (`sec`, `act`, `lnk`, `pop`, `sco`, `spa`) |
+|`state` |auto |State tiddler prefix |
+|`instid` |auto |Unique instance ID |
+|`visible-types` |`"sec"` |Space-separated type codes always visible (not affected by section collapse) |
+|`default-collapsed` |`"yes"` |Start with sections collapsed |
+|`lnk-navigate` |`"yes"` |Navigate to element title on `lnk` click |
+
+Element types:
+
+|!Type |!Click behavior |!Visibility |!Use for |
+|`sec` |Toggle section collapse |Always visible |Section headers, group dividers |
+|`act` |Stores element in `<state>:last-click` |Follows section collapse |Action buttons, menu items |
+|`lnk` |Navigates to element (tiddler title) |Follows section collapse |Links to other tiddlers |
+|`pop` |No action (placeholder) |Follows section collapse |Informational items |
+|`sco` |No action (subcomponent handles clicks) |Follows section collapse |Nested components (e.g., pills inside vtabs) |
+|`spa` |No action |Follows section collapse |Visual spacers/separators |
+
+The `type-fn` filter receives `<<element>>` and must return one type code. Use `then[]` chains:
+
+```
+[<element>prefix[section-]then[sec]]
+  ~[<element>prefix[act-]then[act]]
+  ~[<element>prefix[lnk-]then[lnk]]
+  ~[<element>prefix[scomp-]then[sco]]
+```
+
+Slots (type-specific views):
+
+|!Slot |!Variables |!Description |
+|`view-sec` |`element` |Render section headers |
+|`view-act` |`element` |Render action items |
+|`view-lnk` |`element` |Render links |
+|`view-pop` |`element` |Render popup items |
+|`view-sco` |`element` |Render subcomponents |
+|`view-spa` |`element` |Render spacers |
+|`view` |`element`, `element-type` |Fallback for any type without a specific slot |
+
+Each type-specific slot falls back to the generic `view` slot, which falls back to rendering the element value as plain text.
+
+Section collapse:
+
+- Clicking a `sec` element toggles visibility of all non-`visible-types` elements
+- `default-collapsed="yes"` means only `sec` elements (and other `visible-types`) show on load
+- Collapse state is global (all sections share one toggle), stored in state tiddler
+
+Reading last action:
+
+When an `act` element is clicked, its value is stored in `<state>:last-click`:
+
+```
+Last action: <$text text={{$:/state/my/vtabs:last-click}}/>
+```
+
+Navigate deeper: llm_help("components/facades/vtabs/create") for step-by-step creation guide
