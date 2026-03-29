@@ -86,3 +86,5 @@ Tips:
 - Use `default-collapsed="no"` if you want all sections expanded on load
 - The `visible-types` parameter defaults to `"sec"` — add more types if they should remain visible when sections are collapsed (e.g., `visible-types="sec spa"`)
 - Subcomponents (`sco`) manage their own state independently — use backtick templates for unique state per element: `state=` `` `$:/state/parent:$(element)$` ``
+- Each `sec` element collapses independently — multiple sections in one vtabs each toggle their own children
+- If fills contain interactive elements (buttons, popups), wrap them with `class="rrc-no-propagate"` to prevent the row click handler from also firing: `<span class="rrc-no-propagate"><$button>...</$button></span>`
