@@ -6,6 +6,7 @@ type: text/vnd.tiddlywiki
 ! Changelog
 
 |!Version |!Date |!Changes |
+|v0.1.9 |2026-03-29 |Vtabs: per-section collapse (each sec toggles independently); add `rrc-no-propagate` convention for interactive content in fills |
 |v0.1.8 |2026-03-29 |Fix pills-create docs: elements accepts filters via subfilter (not literal-only); add dynamic elements guidance (filter > $let+join > $wikify) |
 |v0.1.7 |2026-03-29 |Add llm-help pages: facades reference (pills, vtabs), architecture, recipes, new-facade guide |
 |v0.1.6 |2026-03-27 |Fix doc/reference.tid: correct defaults, function names, CSS classes, slot variables; remove dead code from pills.tid |

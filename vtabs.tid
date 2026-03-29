@@ -16,13 +16,16 @@ type: text/vnd.tiddlywiki
 \function rrc0.elems() [subfilter<elements>]
 \function rrc0.elem-type(element) [subfilter<type-fn>else[unknown]]
 
-<!-- Visibility: visible-types always shown, others follow section collapse state -->
+<!-- Visibility: per-section collapse — each sec element toggles independently -->
 \function internal.default-vis() [<default-collapsed>match[yes]then[no]else[yes]]
-\function rrc1.elem-visible(elem, elem-type) [enlist<visible-types>match<elem-type>then[yes]]~[function[rrc1.state.tiddler],[section-vis],<rrc1.uid>get<rrc1.state.field section-vis>]~[function[internal.default-vis]]
+\function internal.parent-sec(elem) [function[rrc0.elems]allbefore<elem>] :filter[function[rrc0.elem-type],<currentTiddler>match[sec]] +[last[]]
+\function internal.is-toggled(sec) [function[rrc1.state.tiddler],[section-vis],<rrc1.uid>get<rrc1.state.field section-vis>enlist-input[]match<sec>then[yes]else[no]]
+\function internal.elem-vis-by-sec(elem) [function[internal.parent-sec],<elem>!is[blank]] :map[function[internal.is-toggled],<currentTiddler>match[yes]then<toggled-vis>else<default-vis>] ~[[yes]]
+\function rrc1.elem-visible(elem, elem-type) [enlist<visible-types>match<elem-type>then[yes]]~[function[internal.elem-vis-by-sec],<elem>]
 
-<!-- Click: sec — toggle section visibility + fire slot -->
+<!-- Click: sec — toggle per-section visibility -->
 \procedure rrc1.elem-clicked:sec(element, modifier, relative-coords)
-<$let vis-tid={{{[function[rrc1.state.tiddler],[section-vis],<rrc1.uid>]}}} vis-fld=<<rrc1.state.field section-vis>> stored={{{[<vis-tid>get<vis-fld>]}}} effective={{{[<stored>!is[blank]]~[function[internal.default-vis]]}}} new-val={{{[<effective>match[yes]then[no]else[yes]]}}}><$action-setfield $tiddler=<<vis-tid>> $field=<<vis-fld>> $value=<<new-val>>/></$let>
+<$let sec-tid={{{[function[rrc1.state.tiddler],[section-vis],<rrc1.uid>]}}} sec-fld=<<rrc1.state.field section-vis>>><$action-listops $tiddler=<<sec-tid>> $field=<<sec-fld>> $subfilter="+[toggle<element>]"/></$let>
 \end
 
 <!-- Click: act — store last-clicked action in state for display -->
@@ -50,8 +53,12 @@ type: text/vnd.tiddlywiki
 \end
 
 <div class="rrc-vtabs">
+<$let
+	default-vis={{{ [function[internal.default-vis]] }}}
+	toggled-vis={{{ [function[internal.default-vis]match[yes]then[no]else[yes]] }}}
+>
 <$eventcatcher selector=".rrc-elem" $click=<<rrc0.elem-clicked>> tag="div">
-<div class="rrc-component">
+<$eventcatcher selector=".rrc-no-propagate" $click="" $stopPropagation="always" tag="div" class="rrc-component">
 	<$list filter="[function[rrc0.elems]]" variable="element">
 		<$let
 			deftype={{{[<rrc0.def-elem-type>!is[blank]else[unknown]]}}}
@@ -62,6 +69,7 @@ type: text/vnd.tiddlywiki
 			<%endif%>
 		</$let>
 	</$list>
-</div>
 </$eventcatcher>
+</$eventcatcher>
+</$let>
 </div>

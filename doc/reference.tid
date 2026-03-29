@@ -81,6 +81,7 @@ type: text/vnd.tiddlywiki
 |`.rrc-pills` |Pills container scope |
 |`.rrc-vtabs` |Vtabs container scope |
 |`.rrc-pills-inline-filter` |Inline filter input container |
+|`.rrc-no-propagate` |Stops click propagation — wrap interactive elements in vtabs fills with this class to prevent row click handlers from firing |
 
 </$fill>
 </$transclude>

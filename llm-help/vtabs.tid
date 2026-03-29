@@ -57,9 +57,18 @@ Each type-specific slot falls back to the generic `view` slot, which falls back 
 
 Section collapse:
 
-- Clicking a `sec` element toggles visibility of all non-`visible-types` elements
+- Clicking a `sec` element toggles visibility of its child elements (elements between this `sec` and the next `sec`)
+- Each section collapses independently — toggling one section does not affect others
 - `default-collapsed="yes"` means only `sec` elements (and other `visible-types`) show on load
-- Collapse state is global (all sections share one toggle), stored in state tiddler
+- Elements before the first `sec` in the list are always visible
+- Collapse state is stored as a list of toggled sections in the state tiddler
+
+Interactive content in fills (stop-propagation):
+
+- Vtabs uses an `$eventcatcher` on `.rrc-elem` rows — clicks anywhere on a row trigger the type handler (e.g., `lnk` navigates)
+- To prevent this when fills contain buttons, popups, or other interactive elements, wrap them with `class="rrc-no-propagate"`
+- Example: `<span class="rrc-no-propagate"><$button>...</$button></span>`
+- The component catches clicks on `.rrc-no-propagate` elements and stops propagation before reaching the row handler
 
 Reading last action:
 
