@@ -71,4 +71,31 @@ Common patterns:
 
 - **Tag picker**: `elements` = list of available tags, `sync-tiddler` = target tiddler, `sync-field` = `"tags"`
 - **Filter toggle**: `elements` = filter options, read selection from `sync-tiddler` and use it in a filter elsewhere
-- **Dynamic elements**: Use a filter run as `elements` value, e.g., `elements="[tag[Color]get[title]]"` — but note pills treats this as a space-separated literal list, NOT a filter. For dynamic lists, pre-compute and pass as a variable.
+- **Dynamic elements**: Pills uses `[subfilter<elements>]` internally, so you can pass a real TW filter: `elements="[tag[Color]sort[title]]"`. A plain space-separated string like `"red green blue"` also works (subfilter treats each word as a title). See below.
+
+Dynamic elements — filters vs pre-computed strings:
+
+Both pills and vtabs accept TW filters in `elements` via `subfilter`. Prefer passing a filter directly over pre-computing a string:
+
+```
+<!-- BEST — pass a filter directly -->
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements="[tag[Project]sort[caption]]"
+  selection="single"
+  sync-tiddler="$:/state/active-project"/>
+
+<!-- OK — pre-compute with $let + join when filter is complex -->
+<$let project-list={{{[tag[Project]status[active]sort[caption]join[ ]]}}}>
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements=<<project-list>>
+  selection="single"/>
+</$let>
+
+<!-- AVOID — $wikify is unnecessarily verbose for this -->
+<$wikify name="elems" text="""<$list filter="[tag[Project]]"><$text text=<<currentTiddler>>/> </$list>""">
+<$transclude $tiddler="$:/plugins/rimir/components/pills"
+  elements=<<elems>>/>
+</$wikify>
+```
+
+When you need `$wikify`: only when building a string that requires widget rendering (e.g., `get[caption]` per item) that `join[]` can't express. For simple title lists, `join[ ]` or a direct filter is always cleaner.
