@@ -4,7 +4,7 @@ title: $:/plugins/rimir/components/llm-help/vtabs
 tags: $:/tags/rimir/llm-help/page
 llm-help-path: components/facades/vtabs
 llm-help-description: Vtabs component — parameters, element types, slots, collapse behavior
-llm-help-context: rimir/components
+llm-help-context: rimir/components/using_existing/vtabs
 llm-help-sort: 02
 type: text/vnd.tiddlywiki
 
