@@ -4,5 +4,5 @@ title: $:/plugins/rimir/components/settings
 type: text/vnd.tiddlywiki
 
 <div class="rr-settings-info-card">
-No configurable settings. Future settings will appear here.
+This plugin has no user-configurable settings.
 </div>
