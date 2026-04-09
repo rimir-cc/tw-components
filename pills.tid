@@ -4,7 +4,7 @@ modified: 20260305110450253
 title: $:/plugins/rimir/components/pills
 type: text/vnd.tiddlywiki
 
-\parameters (elements:"", selection:"multi", filterable:"no", sync-tiddler:"", sync-field:"text", state:"", instid:"")
+\parameters (elements:"", selection:"multi", filterable:"no", sync-tiddler:"", sync-field:"text", state:"", instid:"", view-field:"")
 
 \import $:/plugins/rimir/components/core/mixins/utils $:/plugins/rimir/components/core/mixins/bytype/visibility-delegate $:/plugins/rimir/components/core/mixins/bytype/class-delegate $:/plugins/rimir/components/core/mixins/bytype/view-delegate $:/plugins/rimir/components/core/mixins/bytype/click-delegate $:/plugins/rimir/components/core/mixins/state-handling
 
@@ -39,7 +39,7 @@ type: text/vnd.tiddlywiki
 
 <!-- View: selector elements (slot with fallback) -->
 \procedure rrc1.elem-view:selector(element)
-<$slot $name="view" element=<<element>>><<element>></$slot>
+<$slot $name="view" element=<<element>>><%if [<view-field>!is[blank]]%><$text text={{{ [<element>get<view-field>!is[blank]] ~[<element>] }}}/><%else%><<element>><%endif%></$slot>
 \end
 
 <!-- View: filter element -->
