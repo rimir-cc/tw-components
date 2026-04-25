@@ -118,14 +118,16 @@ describe("components: vtabs rendering", function() {
 	});
 
 	it("should render elements with type from type-fn", function() {
-		var html = render('<$transclude $tiddler="$:/plugins/rimir/components/vtabs" elements="sec1 act1 lnk1" type-fn="[<element>prefix[sec]then[sec]]~[<element>prefix[act]then[act]]~[<element>prefix[lnk]then[lnk]]"/>');
+		// default-collapsed="no" keeps non-sec elements visible so we can
+		// verify all type-fn outputs appear in markup.
+		var html = render('<$transclude $tiddler="$:/plugins/rimir/components/vtabs" elements="sec1 act1 lnk1" type-fn="[<element>prefix[sec]then[sec]]~[<element>prefix[act]then[act]]~[<element>prefix[lnk]then[lnk]]" default-collapsed="no"/>');
 		expect(html).toContain('data-elem-type="sec"');
 		expect(html).toContain('data-elem-type="act"');
 		expect(html).toContain('data-elem-type="lnk"');
 	});
 
 	it("should set data-elem to element value", function() {
-		var html = render('<$transclude $tiddler="$:/plugins/rimir/components/vtabs" elements="sec1 act1" type-fn="[<element>prefix[sec]then[sec]]~[<element>prefix[act]then[act]]"/>');
+		var html = render('<$transclude $tiddler="$:/plugins/rimir/components/vtabs" elements="sec1 act1" type-fn="[<element>prefix[sec]then[sec]]~[<element>prefix[act]then[act]]" default-collapsed="no"/>');
 		expect(html).toContain('data-elem="sec1"');
 		expect(html).toContain('data-elem="act1"');
 	});
